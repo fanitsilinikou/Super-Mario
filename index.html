@@ -24,19 +24,19 @@ body {
 
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
-			this.load.baseURL = 'https://fanitsilinikou.github.io/Super-Mario/';
-			this.load.crossOrigin = 'anonymous';
+			// this.load.baseURL = 'https://ioniodi.github.io/Super-Mario/';
+			// this.load.crossOrigin = 'anonymous';
 
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
 					16);
 			this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
 			this.load.spritesheet('mario', 'assets/sonic_scaled_2.png', 18.66, 16);
 			this.load.spritesheet('coin', 'assets/diamonds.png', 19.42, 16);
-            		this.load.audio('music', 'audio/theme.ogg');
-           		this.load.audio('coin_sound', 'audio/coin.ogg');
-           		this.load.audio('jump_sound', 'audio/jump2.mp3');
-           		this.load.audio('killed_sound', 'audio/killed.sound.mp3');
-           		this.load.audio('stomp_sound', 'audio/stomp.wav');
+            this.load.audio('music', 'audio/theme.ogg');
+            this.load.audio('coin_sound', 'audio/coin.ogg');
+            this.load.audio('jump_sound', 'audio/jump2.mp3');
+            this.load.audio('killed_sound', 'audio/killed.sound.mp3');
+            this.load.audio('stomp_sound', 'audio/stomp.wav');
 			this.load.tilemap('level', 'assets/super_mario_map.json', null,
 					Phaser.Tilemap.TILED_JSON);
             this.load.image('sonic_head', 'assets/sonic_head.png', 16,16);
@@ -45,8 +45,10 @@ body {
         var score;
         var sc = 0;
         var life;
-        var lives = 3;
+        var lives = 2;
         var life_text;
+        var coincounter = 0;
+        var coinlife;
 
 		function create() {
 			Phaser.Canvas.setImageRenderingCrisp(game.canvas)
@@ -91,6 +93,7 @@ body {
 			player.goesRight = true;
             music = game.add.audio('music');
             music.volume = 0.5;
+            music.loop = true;
             music.play();
             coin_sound = game.add.audio('coin_sound');
             jump_sound = game.add.audio('jump_sound');
@@ -151,6 +154,16 @@ body {
             coin_sound.play();
             sc += 100;
             score.text = "Score: " +sc;
+            coincounter += 1;
+            if (coincounter == 85){
+                lives += 1;
+                coinlife = game.add.text(6,100, 'You won one life',{fontSize:25});
+                coinlife.fixedToCamera = true;
+                life_text.text = 'x' + lives;
+            }
+            if (coincounter == 87){
+            coinlife.kill();
+            }
 			coin.kill();
 		}
 
@@ -182,6 +195,8 @@ body {
                     });
                 }
                 else{
+                   
+            
                     
                 
 				 game.time.events.add(Phaser.Timer.SECOND * 3, function() {
